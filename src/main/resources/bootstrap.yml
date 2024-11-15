@@ -6,14 +6,6 @@ spring:
     active: dev
   application:
     name: localGateway
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
-    instance:
-      prefer-ip-address: true
-
   cloud:
     gateway:
       routes:
@@ -24,7 +16,7 @@ eureka:
             - Path=/statusProcessor/**
         # 配置api-service2路由规则
         - id: sa-token
-          uri: 'http://localhost:9006'
+          uri: 'lb://sa-token'
           predicates:
             - Path=/sa-token/**
         # 配置api-service3路由规则
@@ -37,3 +29,12 @@ eureka:
           uri: 'http://localhost:9008'
           predicates:
             - Path=/easy-es/**
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: false
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
